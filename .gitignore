@@ -1,0 +1,21 @@
+# Environment and sensitive files
+.env
+.env.*
+!.env.example
+
+# Runtime and persistent data
+data/
+backups/
+
+# Logs
+*.log
+logs/
+
+# Operating system and IDE artifacts
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
