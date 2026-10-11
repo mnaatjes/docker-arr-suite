@@ -1,31 +1,89 @@
 ---
 # ==============================================================================
-# Docker Compose Stack Specification
-# Adheres to Homelab Systems Lifecycle (HSL) Container Deployment Standards
+# Docker Arr Suite (Media Management & Indexing Automation)
+# Adheres to Homelab Systems Lifecycle (HSL) and ADR 0035 Standards
 # ==============================================================================
 
 services:
-  app:
-    image: caddy:2.8-alpine
-    container_name: sample-app
+  prowlarr:
+    image: lscr.io/linuxserver/prowlarr:1.24.3
+    container_name: prowlarr
     restart: unless-stopped
-    ports:
-      - "${SERVICE_HTTP_PORT:-8080}:80"
     environment:
-      - APP_ENV=${APP_ENV:-dev}
-      - LOG_LEVEL=${LOG_LEVEL:-info}
+      - PUID=${PUID:-999}
+      - PGID=${PGID:-110}
+      - TZ=${TZ:-America/Detroit}
     volumes:
-      # Read-only configuration template mount
-      - ./config/sample.conf:/etc/sample.conf:ro
-      # Dynamic persistent runtime state mount (Mirrored under /opt/.../data/)
-      - sample_data:/data
-    healthcheck:
-      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:80/"]
-      interval: 30s
-      timeout: 5s
-      retries: 3
-      start_period: 10s
+      - ${DATA_DIR:-./data}/prowlarr:/config
+    ports:
+      - "${PROWLARR_PORT:-9696}:9696"
 
-volumes:
-  sample_data:
-    driver: local
+  sonarr:
+    image: lscr.io/linuxserver/sonarr:4.0.10
+    container_name: sonarr
+    restart: unless-stopped
+    environment:
+      - PUID=${PUID:-999}
+      - PGID=${PGID:-110}
+      - TZ=${TZ:-America/Detroit}
+    volumes:
+      - ${DATA_DIR:-./data}/sonarr:/config
+      - ${MEDIA_DIR:-/mnt/nas/media}:/media
+    ports:
+      - "${SONARR_PORT:-8989}:8989"
+
+  radarr:
+    image: lscr.io/linuxserver/radarr:5.14.0
+    container_name: radarr
+    restart: unless-stopped
+    environment:
+      - PUID=${PUID:-999}
+      - PGID=${PGID:-110}
+      - TZ=${TZ:-America/Detroit}
+    volumes:
+      - ${DATA_DIR:-./data}/radarr:/config
+      - ${MEDIA_DIR:-/mnt/nas/media}:/media
+    ports:
+      - "${RADARR_PORT:-7878}:7878"
+
+  lidarr:
+    image: lscr.io/linuxserver/lidarr:2.5.3
+    container_name: lidarr
+    restart: unless-stopped
+    environment:
+      - PUID=${PUID:-999}
+      - PGID=${PGID:-110}
+      - TZ=${TZ:-America/Detroit}
+    volumes:
+      - ${DATA_DIR:-./data}/lidarr:/config
+      - ${MEDIA_DIR:-/mnt/nas/media}:/media
+    ports:
+      - "${LIDARR_PORT:-8686}:8686"
+
+  readarr:
+    image: lscr.io/linuxserver/readarr:develop-0.4.5
+    container_name: readarr
+    restart: unless-stopped
+    environment:
+      - PUID=${PUID:-999}
+      - PGID=${PGID:-110}
+      - TZ=${TZ:-America/Detroit}
+    volumes:
+      - ${DATA_DIR:-./data}/readarr:/config
+      - ${MEDIA_DIR:-/mnt/nas/media}:/media
+    ports:
+      - "${READARR_PORT:-8787}:8787"
+
+  bazarr:
+    image: lscr.io/linuxserver/bazarr:1.4.3
+    container_name: bazarr
+    restart: unless-stopped
+    environment:
+      - PUID=${PUID:-999}
+      - PGID=${PGID:-110}
+      - TZ=${TZ:-America/Detroit}
+    volumes:
+      - ${DATA_DIR:-./data}/bazarr:/config
+      - ${MEDIA_DIR:-/mnt/nas/media}:/media
+    ports:
+      - "${BAZARR_PORT:-6767}:6767"
