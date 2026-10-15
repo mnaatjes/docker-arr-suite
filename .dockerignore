@@ -17,6 +17,7 @@ logs/
 # Documentation and operational specs
 README.md
 docs/
+scripts/
 architecture/
 
 # Editor and OS artifacts
