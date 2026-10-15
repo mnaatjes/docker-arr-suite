@@ -87,14 +87,18 @@ Once registered, Prowlarr immediately initiates category synchronization. Any ne
 
 ---
 
-## 5. Verification
+## 5. Unified Verification via `verify_indexers_sync.py`
 
-Inspect the synced indexers on downstream services:
+The script [`scripts/verify_indexers_sync.py`](file:///home/michael/src/github.com/mnaatjes/docker-arr-suite/scripts/verify_indexers_sync.py) executes a single-pass health check across Prowlarr and all registered downstream applications, printing a complete status report:
 
 ```bash
-# Check Radarr
-curl -s -H "X-Api-Key: <RADARR_KEY>" http://192.168.1.52:7878/api/v3/indexer | jq '.[].name'
-
-# Check Sonarr
-curl -s -H "X-Api-Key: <SONARR_KEY>" http://192.168.1.52:8989/api/v3/indexer | jq '.[].name'
+python3 scripts/verify_indexers_sync.py \
+  --host 192.168.1.52 \
+  --prowlarr-key "<PROWLARR_KEY>" \
+  --sonarr-key "<SONARR_KEY>" \
+  --radarr-key "<RADARR_KEY>" \
+  --lidarr-key "<LIDARR_KEY>" \
+  --readarr-key "<READARR_KEY>"
 ```
+
+The script asserts that each application is actively receiving indexers from Prowlarr and exits with code `0` on success.

@@ -28,8 +28,26 @@ DEFAULT_INDEXERS = [
         "enable": True,
     },
     {
+        "name": "TorrentDownload",
+        "baseUrl": "https://www.torrentdownload.info/",
+        "enable": True,
+    },
+    {
+        "name": "LimeTorrents",
+        "enable": True,
+    },
+    {
+        "name": "Knaben",
+        "enable": True,
+    },
+    {
         "name": "Nyaa.si",
         "baseUrl": "https://nyaa.si/",
+        "enable": True,
+    },
+    {
+        "name": "Tokyo Toshokan",
+        "baseUrl": "https://www.tokyotosho.info/",
         "enable": True,
     },
 ]
